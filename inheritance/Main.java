@@ -42,20 +42,25 @@ public class Main {
 		*/
 
 
-		// Анонимный класс: если мы создаем объект и этот объект обладает чем-то особенным и 
-		// таких объектов программе немного(как правило 1), то можно использовать анонимный класс,
-		// т.е. создать какой-то особенный метод прям в main-е.
-		Car car = new Car(240.2f, 1400f, "green") {
+		// // Анонимный класс: если мы создаем объект и этот объект обладает чем-то особенным и 
+		// // таких объектов программе немного(как правило 1), то можно использовать анонимный класс,
+		// // т.е. создать какой-то особенный метод прям в main-е.
+		// Car car = new Car(240.2f, 1400f, "green") {
 
-			@Override
-			public void ShowSpeed(double speed) {
+		// 	@Override
+		// 	public void ShowSpeed(double speed) {
 
-				super.ShowSpeed(speed);
-				this.engine.isReady(true);
-				System.out.println("Special object");
-			}
-		};
+		// 		super.ShowSpeed(speed);
+		// 		this.engine.isReady(true);
+		// 		System.out.println("Special object");
+		// 	}
+		// };
 
-		car.ShowSpeed(228f);
+		// car.ShowSpeed(228f);
+
+
+		Car car = new Car(240.2f, 1400f, "green");
+		car.SetLight(true);
+		car.BlinkLight();
 	}
 }
