@@ -53,12 +53,44 @@ public class Main {
         System.out.println("Parity sum from 1 to 10 is " + Sum(numbers, parity));
 
         // Можно передавать лямбда-выражение сразу в функцию:
-        System.out.println("Sum of numbers, that more 5: " + Sum(numbers, (x)->(x > 5)));
+        System.out.println("Sum of numbers, that more 5: " + Sum(numbers, (Parity) (x)->(x > 5)));
 
 
-        // Ссылки на методы:
-        Expression expression = ExpressionOperations:: isPositiveNumber;
-        System.out.println(" > 0: " + Sum(numbers, expression));
+        // Ссылки на статичные методы:
+        Expression expression1 = ExpressionOperations:: isPositiveNumber;
+        System.out.println("> 0: " + Sum(numbers, expression1));
+
+        Expression expression2 = ExpressionOperations:: isParityNumber;
+        System.out.println("parity sum: " + Sum(numbers, (Expression) ExpressionOperations:: isParityNumber));
+
+
+        // Для нестатичных методов:
+        ExpressionOperations expression3 = new ExpressionOperations();
+        System.out.println("not parity sum: " + Sum(numbers, (Expression) expression3:: isNotParityNumber));
+
+
+        // ссылки на конструкторы:
+//        PersonCreator personCreator = Person:: new;
+//        Person person = personCreator.create("Alex");
+//        System.out.println(person.GetName());
+
+
+        // возвращение лямбда-выражений:
+        CalculateGeneric<Integer> calculateGeneric = CALCULATE(2);
+        int result = calculateGeneric.calculateGeneric(328, 100);
+        System.out.println("result: " + result);
+    }
+
+
+    public static CalculateGeneric<Integer> CALCULATE(int variant) {
+
+        switch(variant) {
+
+            case 1:  return (x, y) -> x + y;
+            case 2:  return (x, y) -> x - y;
+            case 3:  return (x, y) -> x * y;
+            default: return (x, y) -> x / y;
+        }
     }
 
 
@@ -66,10 +98,11 @@ public class Main {
 
         boolean expresion(int x);
     }
-    class ExpressionOperations {
+    static class ExpressionOperations {
 
         static boolean isPositiveNumber(int x) {return (x > 0);}
         static boolean isParityNumber(int x) {return (x % 2 == 0);}
+        boolean isNotParityNumber(int x) {return (x % 2 != 0);}
     }
 
     public static int Sum(int[] numbers, Parity parity) {
@@ -79,6 +112,18 @@ public class Main {
         int i = 0;
         for(i = 0; i < numbers.length; i++)
             if(parity.isParity(numbers[i]) == true)
+                resultParity += numbers[i];
+
+        return resultParity;
+    }
+
+    public static int Sum(int[] numbers, Expression expression) {
+
+        int resultParity = 0;
+
+        int i = 0;
+        for(i = 0; i < numbers.length; i++)
+            if(expression.expresion(numbers[i]) == true)
                 resultParity += numbers[i];
 
         return resultParity;
@@ -107,5 +152,20 @@ public class Main {
     interface Parity {
 
         boolean isParity(int x);
+    }
+
+    interface PersonCreator {
+
+        Person create(String name);
+    }
+
+    class Person {
+
+        private String name;
+
+        public Person(String name) {this.name = name;}
+        String GetName() {return this.name;}
+        
+    }
     }
 }
