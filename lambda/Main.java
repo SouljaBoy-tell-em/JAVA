@@ -165,7 +165,5 @@ public class Main {
 
         public Person(String name) {this.name = name;}
         String GetName() {return this.name;}
-        
-    }
     }
 }
