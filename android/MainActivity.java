@@ -4,6 +4,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
@@ -30,6 +32,8 @@ import org.w3c.dom.Text;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MainActivity extends AppCompatActivity {
+
+    TextView name;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
@@ -333,37 +337,78 @@ public class MainActivity extends AppCompatActivity {
 //        setContentView(constraintLayout);
 
 
+//        RelativeLayout relativeLayout = new RelativeLayout(this);
+//
+//        EditText editText = new EditText(this);
+//        editText.setId(View.generateViewId());
+//        RelativeLayout.LayoutParams editTextParams =
+//                new RelativeLayout.LayoutParams(400,
+//                                                ViewGroup.LayoutParams.WRAP_CONTENT);
+//        editTextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+//        editTextParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+//
+//        Button button = new Button(this);
+//        button.setText("NEXT");
+//        RelativeLayout.LayoutParams buttonParams =
+//                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+//                                                ViewGroup.LayoutParams.WRAP_CONTENT);
+//        buttonParams.addRule(RelativeLayout.RIGHT_OF, editText.getId());
+//
+//        relativeLayout.addView(editText, editTextParams);
+//        relativeLayout.addView(button, buttonParams);
+//
+//        Intent intent = new Intent(this, SecondActivity.class);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                intent.putExtra("text", editText.getText().toString());
+//                startActivity(intent);
+//            }
+//        });
+//
+//
+//        setContentView(relativeLayout);
+
+
         RelativeLayout relativeLayout = new RelativeLayout(this);
-
-        EditText editText = new EditText(this);
-        editText.setId(View.generateViewId());
-        RelativeLayout.LayoutParams editTextParams =
-                new RelativeLayout.LayoutParams(400,
-                                                ViewGroup.LayoutParams.WRAP_CONTENT);
-        editTextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        editTextParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-
-        Button button = new Button(this);
-        button.setText("NEXT");
         RelativeLayout.LayoutParams buttonParams =
                 new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                                                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        buttonParams.addRule(RelativeLayout.RIGHT_OF, editText.getId());
+        buttonParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        buttonParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 
-        relativeLayout.addView(editText, editTextParams);
-        relativeLayout.addView(button, buttonParams);
+        Button button = new Button(this);
+        button.setId(View.generateViewId());
+        button.setText("INPUT");
+
+        name = new TextView(this);
+        name.setText("Your name is ");
+        RelativeLayout.LayoutParams nameParams =
+                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                ViewGroup.LayoutParams.WRAP_CONTENT);
+        nameParams.addRule(RelativeLayout.RIGHT_OF, button.getId());
 
         Intent intent = new Intent(this, SecondActivity.class);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                intent.putExtra("text", editText.getText().toString());
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
 
-
+        relativeLayout.addView(button, buttonParams);
+        relativeLayout.addView(name, nameParams);
         setContentView(relativeLayout);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        String Name = data.getStringExtra("name");
+        name.setText("Your name is " + Name.toString() + ".");
     }
 }
