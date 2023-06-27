@@ -4,7 +4,9 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -223,78 +227,143 @@ public class MainActivity extends AppCompatActivity {
 //        setContentView(relativeLayout);
 
 
+//        RelativeLayout relativeLayout = new RelativeLayout(this);
+//        relativeLayout.setId(View.generateViewId());
+//
+//        RelativeLayout.LayoutParams seekBarParams =
+//                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//
+//        SeekBar seekBar = new SeekBar(this);
+//        seekBar.setId(View.generateViewId());
+//        seekBar.setMax(100);
+//        seekBar.setProgress(25);
+//
+//
+//        TextView textView = new TextView(this);
+//        textView.setId(View.generateViewId());
+//        textView.setText(String.valueOf(seekBar.getProgress()));
+//
+//        TextView textVolume = new TextView(this);
+//        textVolume.setText("VOLUME:  ");
+//
+//        RelativeLayout.LayoutParams textVolumeParams =
+//                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//
+//        RelativeLayout.LayoutParams textParams =
+//                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//
+//        seekBarParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+//        textParams.addRule(RelativeLayout.BELOW, seekBar.getId());
+//        textParams.addRule(RelativeLayout.CENTER_HORIZONTAL, seekBar.getId());
+//        textVolumeParams.addRule(RelativeLayout.LEFT_OF, textView.getId());
+//        textVolumeParams.addRule(RelativeLayout.BELOW, seekBar.getId());
+//
+//        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+//
+//                textView.setText(String.valueOf(seekBar.getProgress()));
+//
+//                if(seekBar.getProgress() > 75) {
+//
+//                    Snackbar snackbar = Snackbar.make(findViewById(relativeLayout.getId()),
+//                            "it's loud.",
+//                            Snackbar.LENGTH_LONG);
+//
+//                    snackbar.setActionTextColor(0XFF81C784);
+//                    snackbar.show();
+//                    snackbar.setAction("Yes", new View.OnClickListener() {
+//
+//                        @Override
+//                        public void onClick(View view) {
+//
+//                            seekBar.setProgress(45);
+//                            textView.setText(String.valueOf(seekBar.getProgress()));
+//                        }
+//                    });
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//        });
+//
+//        relativeLayout.addView(seekBar, seekBarParams);
+//        relativeLayout.addView(textView, textParams);
+//        relativeLayout.addView(textVolume, textVolumeParams);
+//        setContentView(relativeLayout);
+
+
+        //Resources res = getResources();
+//        TextView textView = new TextView(this);
+//        textView.setText(getString(R.string.app_name));
+//        setContentView(textView);
+
+
+//        ConstraintLayout constraintLayout = new ConstraintLayout(this);
+//        ConstraintLayout.LayoutParams layoutParams =
+//                new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+//                                                  ViewGroup.LayoutParams.WRAP_CONTENT);
+//
+//        Button button = new Button(this);
+//        button.setText("CLICK");
+//
+//        layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+//        layoutParams.rightToRight   = ConstraintLayout.LayoutParams.PARENT_ID;
+//        constraintLayout.addView(button, layoutParams);
+//
+//        Intent intent = new Intent(this, SecondActivity.class);
+//
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                startActivity(intent);
+//            }
+//        });
+//
+//        setContentView(constraintLayout);
+
+
         RelativeLayout relativeLayout = new RelativeLayout(this);
-        relativeLayout.setId(View.generateViewId());
 
-        RelativeLayout.LayoutParams seekBarParams =
-                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        EditText editText = new EditText(this);
+        editText.setId(View.generateViewId());
+        RelativeLayout.LayoutParams editTextParams =
+                new RelativeLayout.LayoutParams(400,
+                                                ViewGroup.LayoutParams.WRAP_CONTENT);
+        editTextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        editTextParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 
-        SeekBar seekBar = new SeekBar(this);
-        seekBar.setId(View.generateViewId());
-        seekBar.setMax(100);
-        seekBar.setProgress(25);
+        Button button = new Button(this);
+        button.setText("NEXT");
+        RelativeLayout.LayoutParams buttonParams =
+                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                ViewGroup.LayoutParams.WRAP_CONTENT);
+        buttonParams.addRule(RelativeLayout.RIGHT_OF, editText.getId());
 
+        relativeLayout.addView(editText, editTextParams);
+        relativeLayout.addView(button, buttonParams);
 
-        TextView textView = new TextView(this);
-        textView.setId(View.generateViewId());
-        textView.setText(String.valueOf(seekBar.getProgress()));
-
-        TextView textVolume = new TextView(this);
-        textVolume.setText("VOLUME:  ");
-
-        RelativeLayout.LayoutParams textVolumeParams =
-                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        RelativeLayout.LayoutParams textParams =
-                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        seekBarParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        textParams.addRule(RelativeLayout.BELOW, seekBar.getId());
-        textParams.addRule(RelativeLayout.CENTER_HORIZONTAL, seekBar.getId());
-        textVolumeParams.addRule(RelativeLayout.LEFT_OF, textView.getId());
-        textVolumeParams.addRule(RelativeLayout.BELOW, seekBar.getId());
-
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        Intent intent = new Intent(this, SecondActivity.class);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+            public void onClick(View view) {
 
-                textView.setText(String.valueOf(seekBar.getProgress()));
-
-                if(seekBar.getProgress() > 75) {
-
-                    Snackbar snackbar = Snackbar.make(findViewById(relativeLayout.getId()),
-                            "it's loud.",
-                            Snackbar.LENGTH_LONG);
-
-                    snackbar.setActionTextColor(0XFF81C784);
-                    snackbar.show();
-                    snackbar.setAction("Yes", new View.OnClickListener() {
-
-                        @Override
-                        public void onClick(View view) {
-
-                            seekBar.setProgress(45);
-                            textView.setText(String.valueOf(seekBar.getProgress()));
-                        }
-                    });
-                }
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
+                intent.putExtra("text", editText.getText().toString());
+                startActivity(intent);
             }
         });
 
-        relativeLayout.addView(seekBar, seekBarParams);
-        relativeLayout.addView(textView, textParams);
-        relativeLayout.addView(textVolume, textVolumeParams);
+
         setContentView(relativeLayout);
     }
 }
