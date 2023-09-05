@@ -17,6 +17,7 @@ public class SubmitController {
 //		model.addAttribute("name", new Name());
 		return "submit_form";
 	}
+
 	
 	@ModelAttribute("name")
 	public Name name() {
@@ -24,9 +25,14 @@ public class SubmitController {
 	}
 	
 	@PostMapping
-	public String send(@ModelAttribute Name name, Model model) {
+	public String send1(@ModelAttribute Name name) {
 		
-		model.addAttribute("name", name);
+		return "redirect:/submit/getform";
+	}
+	
+	@PostMapping("/getform")
+	public String send2(@ModelAttribute Name name) {
+		
 		return "getform";
 	}
 }
