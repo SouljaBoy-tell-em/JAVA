@@ -32,18 +32,18 @@ public class Main {
 		
 		Statement statement = connection.createStatement();
 		statement.execute(DELETE_STRING + id);
-	}
+    }
 
-	private static void insert(int id, String name) throws SQLException {
+    private static void insert(int id, String name) throws SQLException {
 
 		Statement statement = connection.createStatement();
 		statement.execute(INSERT_STRING + id + ", '" + name + "')");
-	}
+    }
 	
-	private static void update(int id, String name) throws SQLException { 
+    private static void update(int id, String name) throws SQLException { 
 		
 		Statement statement = connection.createStatement();
 		statement.executeUpdate(UPDATE_STRING + name + "' WHERE id = " + id);
-	}
+    }
 }
 
