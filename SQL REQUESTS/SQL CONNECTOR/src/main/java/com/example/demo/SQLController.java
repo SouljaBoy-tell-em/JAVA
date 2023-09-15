@@ -2,9 +2,8 @@ package com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,24 +11,34 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping
 public class SQLController {
-
+    private final static String REGISTER_USER_PAGE = "/register_user";
+    private final static String SQLOBJECTS_PAGE = "/sqlbase_users";
     @Autowired
     private SQLRepository sqlRepository;
-    private static Connection connection;
-    public SQLController() throws SQLException {
-
-//        connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/mydb", "root", "1543");
-//        Statement statement = connection.createStatement();
-//        statement.execute("UPDATE students SET name='" + "SSS" +"' WHERE id=53");
+    @ModelAttribute("SQLConnectorObject")
+    public SQLConnectorObject sqlConnectorObject() {
+        return new SQLConnectorObject();
     }
 
-    @GetMapping("/objects")
-    public String AddSQLConnectorObject() {
+    @GetMapping(REGISTER_USER_PAGE)
+    public String RegisterUser(@ModelAttribute("SQLConnectorObject") SQLConnectorObject sqlConnectorObject) {
+        return "register_user";
+    }
+    @PostMapping(REGISTER_USER_PAGE)
+    public String RegisterUserRedirect(@ModelAttribute("SQLConnectorObject") SQLConnectorObject sqlConnectorObject) {
+        return "redirect:/register_user/SQLObjectsBase";
+    }
 
-        sqlRepository.save(new SQLConnectorObject(228, "228"));
-        return "page";
+    @PostMapping(REGISTER_USER_PAGE + SQLOBJECTS_PAGE)
+    public String SQLObjectsBase(@ModelAttribute("SQLConnectorObject") SQLConnectorObject sqlConnectorObject, Model model) {
+
+        SQLDB sqldb = new SQLDB(sqlRepository.findAll());
+        sqlRepository.save(sqlConnectorObject);
+        model.addAttribute("SQLDB", sqldb);
+
+        return "SQLObjectsBase";
     }
 }

@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+    <html xmlns:th="https://www.thymeleaf.org">
+
+    <head>
+        <title>Getting Started: Handling Form Submission</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+
+    <body>
+        <h1>Result</h1>
+
+        <table width="25%">
+            <colgroup>
+                <col span="2" style="background:Khaki">
+                <col style="background-color:LightCyan">
+            </colgroup>
+        <tr>
+            <th>ID<br/></th>
+            <th>NAME<br/></th>
+        </tr>
+
+        <div th:each="elem : ${SQLDB.DB}">
+
+        <tr>
+            <th><span th:text="${elem.id}">INGREDIENT</span><br/></th>
+            <th><span th:text="${elem.name}">INGREDIENT</span></th>
+        </tr>
+        </div>
+        </table>
+
+        <p>ELEMENT:</p>
+        <p th:text="'id: ' + ${SQLConnectorObject.id}"/>
+        <p th:text="'name: ' + ${SQLConnectorObject.name}" />
+        <p>WAS ADDED.</p>
+        <a href="/register_user">Add new user</a>
+    </body>
+</html>
