@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Handing Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h3>Next user was register successfully: </h3>
+    <p>ID: <span th:text="${user.id}">ID</span> </p>
+    <p>NAME: <span th:text="${user.name}">NAME</span> </p>
+    <p>PASSWORD: <span th:text="${user.password}">PASSWORD</span> </p>
+    <a href="/register"><p>CREATE NEW USER</p></a>
+    <a href="/"><p>RETURN TO MAIN PAGE</p></a>
+</form>
+</body>
+</html>
