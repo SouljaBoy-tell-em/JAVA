@@ -3,10 +3,12 @@ package com.example.authenticate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.SecurityBuilder;
+import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,14 +28,19 @@ import java.util.Objects;
 public class SecurityConfig {
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/home").permitAll()
+                        .requestMatchers("/", "/register").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
+                        .defaultSuccessUrl("/request", true)
                         .permitAll()
                 )
                 .logout((logout) -> logout.permitAll());
@@ -42,14 +49,23 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails user =
-                User.withDefaultPasswordEncoder()
-                        .username("user")
-                        .password("password")
-                        .roles("USER")
-                        .build();
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
 
-        return new InMemoryUserDetailsManager(user);
+        return username -> {
+
+            UserDetails user = findUserByUsername(userRepository, username);
+            return user;
+        };
     }
+
+    private User findUserByUsername(UserRepository userRepository, String username) {
+
+        List<User> users = userRepository.findAll();
+        for(int indexUser = 0; indexUser < users.size(); indexUser++)
+            if(Objects.equals(users.get(indexUser).getUsername(), username))
+                return new User(users.get(indexUser));
+
+        return null;
+    }
+
 }
