@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <title>AUTH</title>
+</head>
+<body>
+    <h1>Profile: </h1>
+    <h3><span th:remove="tag" sec:authentication="name">User name</span></h3>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="sign out">
+    </form>
+</body>
+</html>
