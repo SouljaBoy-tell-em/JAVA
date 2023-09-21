@@ -2,8 +2,10 @@ package com.example.authenticate;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,16 +15,20 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "api/users", produces = {"application/json"})
-@CrossOrigin(origins = {"http://localhost:8080", "http://localhost:8081"}, maxAge = 3000)
+@CrossOrigin(origins = {"http://localhost:8080", "http://localhost:8081"})
 public class MainRestController {
 
     private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
-    public MainRestController(UserRepository userRepository) {
+    public MainRestController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping("/rest")
+
+    @GetMapping
     public List<User> GetUsers() {
 
         return userRepository.findAll();
@@ -34,12 +40,15 @@ public class MainRestController {
         return userRepository.findById(id);
     }
 
-    @PostMapping(consumes = "application/json", path = "/rest")
-//    @PostMapping(consumes = "application/json")
+//    @PostMapping(consumes = "application/json", path = "/rest")
+    @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public User AddUser(@RequestBody User user) {
 
-        return userRepository.save(user);
+//        User saveUser = new User(user.getUsername(), passwordEncoder.encode(user.getPassword()));
+        User saveUser = new User(user);
+        userRepository.save(saveUser);
+        return saveUser;
     }
 
     @DeleteMapping("/{id}")
@@ -47,7 +56,8 @@ public class MainRestController {
         userRepository.deleteById(id);
     }
 
-    // обработка HttpStatus, а именно проверка на существование user-a;
+////  обработка HttpStatus, а именно проверка на существование user-a;
+//
 //    @GetMapping("/{id}")
 //    public ResponseEntity<User> GetUserById(@PathVariable("id") int id) {
 //
