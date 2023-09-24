@@ -39,7 +39,7 @@ public class MainRestController {
     @GetMapping
     public List<User> GetUsers() {
 
-        Person user = new Person("p228", passwordEncoder.encode("u228"));
+        UserFactory user = new UserFactory("p228", passwordEncoder.encode("u228"));
         AddUserRest(user);
         return userRepository.findAll();
     }
@@ -50,42 +50,20 @@ public class MainRestController {
     }
 
     @PostMapping
-    public User AddUser(@RequestBody Person person) {
+    public User AddUser(@RequestBody UserFactory userFactory) {
 
-        User user = new User(person.getName(), passwordEncoder.encode(person.getPassword()));
+        User user = new User(userFactory);
         userRepository.save(user);
         return user;
     }
 
-//    @DeleteMapping("/{id}")
-//    public void DeleteUser(@PathVariable("id") int id) {
-//        userRepository.deleteById(id);
-//    }
+    @DeleteMapping("/{id}")
+    public void DeleteUser(@PathVariable("id") int id) {
+        userRepository.deleteById(id);
+    }
 
-//  обработка HttpStatus, а именно проверка на существование user-a;
-//
-//    @GetMapping("/{id}")
-//    public ResponseEntity<User> GetUserById(@PathVariable("id") int id) {
-//
-//        Optional<User> user = userRepository.findById(id);
-//
-//        if(user.isPresent())
-//            return new ResponseEntity<>(user.get(), HttpStatus.OK);
-//        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-//    }
+    public void AddUserRest(UserFactory userFactory) {
 
-//    public User GetUserByIdRest(int id) {
-//
-//        Map<String, Integer> mapID = new HashMap<>();
-//        mapID.put("id", id);
-//        URI url = UriComponentsBuilder.fromHttpUrl("http://localhost:8080/api/users").build(id);
-//
-//        System.out.println("USERNAME: " + GetUserById(mapID.get("id")).get().getUsername());
-//        return restTemplate.getForObject(url, User.class);
-//    }
-
-    public void AddUserRest(Person person) {
-
-        restTemplate.postForObject("http://localhost:8080/api/users", person, Person.class);
+        restTemplate.postForObject("http://localhost:8080/api/users", userFactory, UserFactory.class);
     }
 }

@@ -25,17 +25,16 @@ public class User implements UserDetails {
 
     }
 
-    public User(String username, String password){
+    public User(String username, String password) {
 
         this.username = username;
         this.password = password;
     }
 
-    public User(int id, String username, String password) {
+    public User(UserFactory userFactory) {
 
-        this.id = id;
-        this.username = username;
-        this.password = password;
+        this.username = userFactory.getUsername();
+        this.password = userFactory.getPassword();
     }
 
     public User(User user) {
