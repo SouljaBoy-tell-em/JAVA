@@ -1,3 +1,5 @@
+package ru.skillbench.tasks.basics.math;
+
 public class ArrayVectorImpl implements ArrayVector{
 
     public double[] array;
