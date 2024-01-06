@@ -13,7 +13,9 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.model.MeshPart;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.Bullet;
@@ -25,33 +27,37 @@ import com.badlogic.gdx.physics.bullet.collision.btCollisionConfiguration;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionDispatcher;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
+import com.badlogic.gdx.physics.bullet.collision.btConeShape;
+import com.badlogic.gdx.physics.bullet.collision.btCylinderShape;
 import com.badlogic.gdx.physics.bullet.collision.btDefaultCollisionConfiguration;
 import com.badlogic.gdx.physics.bullet.collision.btDispatcher;
 import com.badlogic.gdx.physics.bullet.collision.btDispatcherInfo;
 import com.badlogic.gdx.physics.bullet.collision.btManifoldResult;
 import com.badlogic.gdx.physics.bullet.collision.btSphereBoxCollisionAlgorithm;
 import com.badlogic.gdx.physics.bullet.collision.btSphereShape;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import jdk.internal.net.http.common.Log;
 
-
-
-public class Random_spawn implements ApplicationListener {
+public class Physics_1st implements ApplicationListener {
     private PerspectiveCamera camera;
     private Model model;
     private ArrayList<String> nodesId;
+    private HashMap<String, btCollisionShape> ShapeCreator;
     private ModelBatch batch;
     private Environment environment;
     private CameraInputController controller;
     private btCollisionShape groundShape;
     private btCollisionObject groundObject;
-    private btCollisionObject ballObject, cubeObject;
     private btCollisionConfiguration collisionConfig;
     private btDispatcher dispatcher;
     private float spawnTimer;
     public ArrayList<GameObject> objects;
     public ModelInstance ground;
-    private String[] params = {"ball", "cube"};
+    private String[] params = {"cube", /*"ball",*/ /*"cube",*/ /*"cylinder",*/ /*"ball",*/ "par"};
+    private ModelBuilder builder;
 
     @Override
     public void create() {
@@ -59,6 +65,7 @@ public class Random_spawn implements ApplicationListener {
         spawnTimer = 3.5f;
         Bullet.init();
         environment = new Environment();
+        ShapeCreator = new HashMap<>();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight,
                 0.4f, 0.4f, 0.4f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f,
@@ -72,7 +79,7 @@ public class Random_spawn implements ApplicationListener {
         camera.far = 300;
         camera.update();
 
-        ModelBuilder builder = new ModelBuilder();
+        builder = new ModelBuilder();
         nodesId = new ArrayList<>();
         builder.begin();
         builder.node().id = "ground";
@@ -80,20 +87,22 @@ public class Random_spawn implements ApplicationListener {
                         VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal,
                         new Material(ColorAttribute.createDiffuse(Color.RED)))
                .box(15f, 1f, 15f);
-
-        builder.node().id = "ball";
-        nodesId.add("ball");
-        builder.part("sphere", GL20.GL_TRIANGLES,
-                        VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal,
-                        new Material(ColorAttribute.createDiffuse(Color.GREEN)))
-               .sphere(1f, 1f, 1f, 10, 10);
-
-        builder.node().id = "cube";
-        nodesId.add("cube");
-        builder.part("box", GL20.GL_TRIANGLES,
-                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal,
-                new Material(ColorAttribute.createDiffuse(Color.ORANGE)))
-               .box(1f, 1f, 1f);
+        CreateNode("ball", "sphere",
+                new Material(ColorAttribute.createDiffuse(Color.GREEN)),
+                new btSphereShape(0.5f))
+                .sphere(1f, 1f, 1f, 10, 10);
+        CreateNode("cube", "cube",
+                new Material(ColorAttribute.createDiffuse(Color.PINK)),
+                new btBoxShape(new Vector3(0.5f, 0.5f, 0.5f)))
+                .box(1f, 1f, 1f);
+        CreateNode("par", "cube",
+                new Material(ColorAttribute.createDiffuse(Color.VIOLET)),
+                new btBoxShape(new Vector3(1.5f, 1f, 0.5f)))
+                .box(3f, 2f, 1f);
+//        CreateNode("cylinder", "cylinder",
+//                new Material(ColorAttribute.createDiffuse(Color.CYAN)),
+//                new btCylinderShape(new Vector3(.5f, 1f, .5f)))
+//                .cylinder(1f, 2f, 1f, 10);
         model = builder.end();
 
         ground = new ModelInstance(model, "ground");
@@ -103,7 +112,9 @@ public class Random_spawn implements ApplicationListener {
         groundObject.setWorldTransform(ground.transform);
         objects = new ArrayList<>();
         objects.add(new GameObject(model, "cube",
-                new Vector3(0f, 6f, 0f), new btBoxShape(new Vector3(0.5f, 0.5f, 0.5f))));
+                new Vector3(0f, 9f, 0f), new btBoxShape(new Vector3(0.5f, 0.5f, 0.5f))));
+//        objects.add(new GameObject(model, "cone",
+//                new Vector3(0f, 9f, 0f), new btConeShape(0.5f, 2f)));
 
         controller = new CameraInputController(camera);
         Gdx.input.setInputProcessor(controller);
@@ -119,7 +130,7 @@ public class Random_spawn implements ApplicationListener {
     @Override
     public void render() {
 
-        final float delta = 0.1f;
+        final float delta = 0.01f;
 
         Spawn(delta);
 
@@ -182,17 +193,28 @@ public class Random_spawn implements ApplicationListener {
         return r;
     }
 
+    private MeshPartBuilder CreateNode(String nodeId, String type, Material material,
+                                       btCollisionShape shape) {
+        builder.node().id = nodeId;
+        nodesId.add(type);
+        ShapeCreator.put(nodeId, shape);
+        return builder.part(nodeId, GL20.GL_TRIANGLES,
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal,
+               material);
+    }
+
     private void Spawn(float delta) {
 
         int LastIndex = objects.size() - 1;
         if(!objects.get(LastIndex).collision) {
+            delta += 0.1f;
             objects.get(LastIndex).transform.translate(0f, -delta, 0f);
             objects.get(LastIndex).btCollisionObject.setWorldTransform(objects.get(LastIndex).transform);
             if(AnyToAnyMoving(groundObject, objects.get(LastIndex).btCollisionObject)) {
                 objects.get(LastIndex).collision = true;
-                GameObject object = new GameObject(model, params[(int) (Math.random() * 2)],
-                        new Vector3(rnd(-3f, 3f), 6f, rnd(-3f, 3f)),
-                        new btBoxShape(new Vector3(0.5f, 0.5f, 0.5f)));
+                GameObject object = new GameObject(model, params[(int) (Math.random() * params.length)],
+                        new Vector3(rnd(-3f, 3f), 9f, rnd(-3f, 3f)),
+                        ShapeCreator.get(params[(int) (Math.random() * params.length)]));
                 objects.add(object);
             }
         }
