@@ -1,0 +1,22 @@
+server:
+  port: 9000
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9000/oauth2/jwks
+
+#      client:
+#        registration:
+#          client:
+#            provider: cloud
+#            client-id: client
+#            client-secret: password
+#            authorization-grant-type: authorization_code
+#            redirect-uri: "http://127.0.0.1:9090/login/oauth2/code/{registrationId}"
+#            scope: get
+#        provider:
+#          cloud:
+#            issuer-uri: http://authserver:9000
