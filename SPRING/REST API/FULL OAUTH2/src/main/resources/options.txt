@@ -5,4 +5,5 @@ curl localhost:9000/oauth2/token -H"Content-type: application/x-www-form-urlenco
 curl localhost:9000/oauth2/token -H"Content-type: application/x-www-form-urlencoded" -d"grant_type=refresh_token&refresh_token=Gg6HjUtj-ruUy8-eg_dJ6mZD-ctPfwp25AFiwyySYEyzR6QtbA9y7b_z1VTypvKEXv9nDVYNStNL17G_WK2ChtP1W1DSTdhxnX-Xs3WEnyRDyx0XPCqhuGuizU5uFCTG" -u client:password
 
 
+Отправить post-запрос на добавление элемента в ArrayList<Feature> посредством REST-API(POST):
 curl localhost:9000/features1 -H"Content-type: application/json" -d'{"id":1, "name":"Coconut Shrimp"}' -H"Authorization: Bearer eyJraWQiOiI4NjgyNGRkNS03Mjk0LTRiODQtOTQ5MC00YmIzMTExYzZjODYiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJjbGllbnQiLCJhdWQiOiJjbGllbnQiLCJuYmYiOjE3MDgyNjk0NDksInNjb3BlIjpbImdldCJdLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjkwMDAiLCJleHAiOjE3MDgyNjk3NDksImlhdCI6MTcwODI2OTQ0OX0.nUyYf-1FliOAKovwBU8I4Sf5lgfQVsDNxkgkMAyJ_hdkW6zTNE3bdJdzf0ZH2jU8IkeOas67T38K-9B0UMRuEYYHpp-2_9G7aaFIl3el3adn2bfXrzx_vjpqdK6coGz_RUU0x4IjxzTp458LxK8LdsNmapMn7obCGrn7gWWKecEWBxltU_o5z5UsWKY-5RTN56Caedv1hSq4IugLWhiVoda9AQjWmVXv8SVUxOxw-nOfW2gKT0IQ1KG4cBt4Y4mfbJm2SvKIS1J-fO-tkiaijs3LZxFwtczs8hQFB6VIL5rzq2_BTUvEIlrTJgbLa1ZNGIo2d2xDnJQH2mXKxyNzVQ"
