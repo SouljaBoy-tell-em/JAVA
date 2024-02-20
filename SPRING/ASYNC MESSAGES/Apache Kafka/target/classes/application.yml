@@ -1,0 +1,8 @@
+spring:
+  kafka:
+    bootstrap-servers:
+      - localhost:9092
+    template:
+      default-topic: cloud.topic
+    consumer:
+      group-id: cloud_id
