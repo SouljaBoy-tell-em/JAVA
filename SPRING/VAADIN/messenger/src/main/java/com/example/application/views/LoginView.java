@@ -6,6 +6,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
+
 @Route("login")
 @AnonymousAllowed
 public class LoginView extends VerticalLayout {
@@ -20,7 +21,7 @@ public class LoginView extends VerticalLayout {
         login.setAction("login");
 
         add(
-                new H1("Todo app"),
+                new H1("Registration"),
                 login
         );
     }

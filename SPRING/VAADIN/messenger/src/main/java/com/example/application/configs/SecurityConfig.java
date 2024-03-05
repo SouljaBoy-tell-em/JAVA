@@ -1,22 +1,28 @@
 package com.example.application.configs;
 
 
+import com.example.application.User;
 import com.example.application.views.LoginView;
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
+import java.util.List;
 
 
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends VaadinWebSecurity {
+
+    @Autowired
+    private List<UserDetails> ListUserBase;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -30,11 +36,7 @@ public class SecurityConfig extends VaadinWebSecurity {
     }
 
     @Bean
-    public UserDetailsManager userDetailsManager(){
-        return new InMemoryUserDetailsManager(
-                User.withUsername("marcus")
-                        .password("{noop}marcus")
-                        .roles("USER").build()
-        );
+    public UserDetailsManager userDetailsManager() {
+        return new InMemoryUserDetailsManager(ListUserBase);
     }
 }

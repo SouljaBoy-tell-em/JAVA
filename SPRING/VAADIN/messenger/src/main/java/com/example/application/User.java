@@ -5,17 +5,17 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Pattern;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 
 
 @Entity
 @Table(name = "UserTable")
-public class User implements UserDetails {
+public class User implements UserDetails, Serializable {
 
 //    @Pattern(regexp = "^[A-Z][a-z]*$",
 //            message = "Enter the correct firstname")
@@ -32,9 +32,9 @@ public class User implements UserDetails {
     @Column(name = "Email")
     private String Email;
 
-    @Id
 //    @Pattern(regexp = "^[A-Za-z]+[A-Za-z0-9]*$",
 //            message = "Enter the correct username")
+    @Id
     @Column(name = "Username")
     private String Username;
 

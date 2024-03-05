@@ -5,10 +5,7 @@ import com.example.application.User;
 import com.example.application.repositories.UserRepository;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -42,6 +39,7 @@ public class RegisterView extends Div {
         Button RegisterButton    = new Button("REGISTER", event -> UI.getCurrent().navigate(""));
 
         RegisterButton.addClickListener(click -> {
+
             userRepository.save(new User(
                     FirstNameField.getValue(),
                     LastNameField.getValue(),
