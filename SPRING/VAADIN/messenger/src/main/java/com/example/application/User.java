@@ -69,67 +69,48 @@ public class User implements UserDetails, Serializable {
         return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"),
                              new SimpleGrantedAuthority("ROLE_ADMIN"));
     }
-
-    @Override
-    public String getPassword() {
-        return Password;
-    }
-
-    @Override
-    public String getUsername() {
-        return Username;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    public String getFirstname() {
-        return Firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        Firstname = firstname;
-    }
-
-    public String getLastname() {
-        return Lastname;
-    }
-
-    public void setLastname(String lastname) {
-        Lastname = lastname;
-    }
-
     public String getEmail() {
         return Email;
     }
-
+    public String getFirstname() {
+        return Firstname;
+    }
+    public String getLastname() {
+        return Lastname;
+    }
+    @Override public String getPassword() {
+        return Password;
+    }
+    @Override public String getUsername() {
+        return Username;
+    }
+    @Override public boolean isAccountNonExpired() {
+        return true;
+    }
+    @Override public boolean isAccountNonLocked() {
+        return true;
+    }
+    @Override public boolean isCredentialsNonExpired() {
+        return true;
+    }
+    @Override public boolean isEnabled() {
+        return true;
+    }
     public void setEmail(String email) {
         Email = email;
     }
-
+    public void setFirstname(String firstname) {
+        Firstname = firstname;
+    }
+    public void setLastname(String lastname) {
+        Lastname = lastname;
+    }
+    public void setPassword(String Password) {
+        this.Password = Password;
+    }
     public void setUsername(String Username) {
         this.Username = Username;
     }
 
-    public void setPassword(String Password) {
-        this.Password = Password;
-    }
 
 }

@@ -1,0 +1,18 @@
+.middle_layer {
+    position: absolute;
+    height: 90%;
+    width: 100%;
+}
+
+.message_list_scroller {
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    width: 100%;
+}
+
+.message_input {
+    position: absolute;
+    bottom: 0;
+    height: 10%;
+    width: 100%;
+}

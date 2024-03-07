@@ -28,42 +28,55 @@ public class RegisterView extends Div {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // PAGE ELEMENTS:
+    private VerticalLayout registerVerticalLayout;
+    private TextField firstNameField;
+    private TextField lastNameField;
+    private TextField usernameField;
+    private TextField emailField;
+    private PasswordField passwordField;
+    private H1 titleRegistration;
+    private Button registerButton;
+
     public RegisterView() {
+        ElemPageInitializer();
 
-        TextField FirstNameField = new TextField("First name");
-        TextField LastNameField  = new TextField("Last name");
-        TextField UsernameField  = new TextField("Username");
-        TextField EmailField     = new TextField("Email");
-        PasswordField Password   = new PasswordField("Password");
-        H1 TitleRegistration     = new H1("Registration:");
-        Button RegisterButton    = new Button("REGISTER", event -> UI.getCurrent().navigate(""));
-
-        RegisterButton.addClickListener(click -> {
-
+        registerButton.addClickListener(click -> {
             userRepository.save(new User(
-                    FirstNameField.getValue(),
-                    LastNameField.getValue(),
-                    UsernameField.getValue(),
-                    EmailField.getValue(),
-                    passwordEncoder.encode(Password.getValue())));
+                    firstNameField.getValue(),
+                    lastNameField.getValue(),
+                    usernameField.getValue(),
+                    emailField.getValue(),
+                    passwordEncoder.encode(passwordField.getValue())));
         });
 
-        VerticalLayout RegisterVerticalLayout = new VerticalLayout();
-        RegisterVerticalLayout.add(
-                TitleRegistration,
-                FirstNameField,
-                LastNameField,
-                UsernameField,
-                EmailField,
-                Password,
-                RegisterButton
+        registerVerticalLayout.add(
+                titleRegistration,
+                firstNameField,
+                lastNameField,
+                usernameField,
+                emailField,
+                passwordField,
+                registerButton
         );
 
-        RegisterVerticalLayout.setSizeFull();
-        RegisterVerticalLayout.setAlignItems(FlexComponent
+        registerVerticalLayout.setSizeFull();
+        registerVerticalLayout.setAlignItems(FlexComponent
                                        .Alignment.CENTER);
-        RegisterVerticalLayout.setJustifyContentMode(FlexComponent
+        registerVerticalLayout.setJustifyContentMode(FlexComponent
                                       .JustifyContentMode.CENTER);
-        add(RegisterVerticalLayout);
+        add(registerVerticalLayout);
+    }
+
+    private void ElemPageInitializer() {
+        registerVerticalLayout = new VerticalLayout();
+        firstNameField    = new TextField("First name");
+        lastNameField     = new TextField("Last name");
+        usernameField     = new TextField("Username");
+        emailField        = new TextField("Email");
+        passwordField     = new PasswordField("Password");
+        titleRegistration = new H1("Registration:");
+        registerButton    = new Button("REGISTER",
+                event -> UI.getCurrent().navigate(""));
     }
 }
