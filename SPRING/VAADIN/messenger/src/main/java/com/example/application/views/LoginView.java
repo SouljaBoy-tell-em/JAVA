@@ -33,7 +33,7 @@ public class LoginView extends VerticalLayout {
 
     private void ElemPageDesigner() {
         logoImage.setHeight("150px");
-        loginForm.setAction("Log in");
+        loginForm.setAction("login");
     }
 
     private void ElemPageInitializer() {

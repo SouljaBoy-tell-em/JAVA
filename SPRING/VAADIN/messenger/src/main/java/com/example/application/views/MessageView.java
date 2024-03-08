@@ -4,9 +4,11 @@ package com.example.application.views;
 import com.example.application.User;
 import com.example.application.repositories.UserRepository;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.messages.MessageInput;
 import com.vaadin.flow.component.messages.MessageList;
 import com.vaadin.flow.component.messages.MessageListItem;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
@@ -31,7 +33,7 @@ import java.util.List;
 @AnonymousAllowed
 @Slf4j
 //@Lazy
-public class MessageView extends VerticalLayout {
+public class MessageView extends Div {
     @Autowired
     private RabbitTemplate rabbitTemplate;
     @Autowired
@@ -49,7 +51,6 @@ public class MessageView extends VerticalLayout {
     private MessageInput messageInput;
 
     public MessageView() {
-        setAlignItems(Alignment.CENTER);
         ElemPageInitializer();
         ElemPageDesigner();
 
