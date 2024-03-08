@@ -4,11 +4,10 @@ package com.example.application.views;
 import com.example.application.User;
 import com.example.application.repositories.UserRepository;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.messages.MessageInput;
 import com.vaadin.flow.component.messages.MessageList;
 import com.vaadin.flow.component.messages.MessageListItem;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
@@ -19,7 +18,6 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import reactor.core.publisher.Flux;
@@ -32,25 +30,29 @@ import java.util.List;
 @Route("messenger")
 @AnonymousAllowed
 @Slf4j
-//@Lazy
-public class MessageView extends Div {
+public class MessageView extends VerticalLayout {
+
     @Autowired
     private RabbitTemplate rabbitTemplate;
     @Autowired
     private UserRepository userRepository;
-    private User CurrentUser;
+    private User currentUser;
     private String exchange = "rabbitmq.exchange2";
     private String routingKey = "rabbitmq.routingkey2";
     private String queue = "rabbitmq.queue2";
     private String CurrentMessage = "";
 
     // PAGE ELEMENTS:
+    private UI ui;
     private VerticalLayout middleLayer;
     private Scroller messageListScroller;
     private MessageList messageList;
     private MessageInput messageInput;
+    private float windowHeight;
+    private double messageInputHeight;
 
     public MessageView() {
+        setSizeFull();
         ElemPageInitializer();
         ElemPageDesigner();
 
@@ -58,14 +60,21 @@ public class MessageView extends Div {
             MessageInputSender(listener);
         });
 
-        middleLayer.add(messageListScroller);
         add(middleLayer, messageInput);
 
-        var ui = UI.getCurrent();
         Delay().subscribe(delay -> {
             ui.access(() -> {
+                DynamicParamsInitializer();
                 MessageListUpdater();
             });
+        });
+
+        ui.getPage().addBrowserWindowResizeListener(details -> {
+            this.windowHeight = details.getHeight();
+            middleLayer.setHeight((float) (windowHeight -
+                                           messageInputHeight -
+                                           50),
+                                           Unit.PIXELS);
         });
     }
 
@@ -79,16 +88,29 @@ public class MessageView extends Div {
         return Flux.interval(Duration.ofMillis(100));
     }
 
+    private void DynamicParamsInitializer() {
+        messageInput
+                .getElement()
+                .executeJs("return $0.clientHeight", messageInput
+                        .getElement())
+                .then(height -> {
+                    this.messageInputHeight = height.asNumber();
+                });
+    }
+
 
     private void ElemPageDesigner() {
         middleLayer.addClassNames("middle_layer");
         messageListScroller.addClassNames("message_list_scroller");
+        messageList.addClassNames("message_list");
         messageInput.addClassNames("message_input");
 
         messageListScroller.setContent(messageList);
+        middleLayer.add(messageListScroller);
     }
 
     private void ElemPageInitializer() {
+        ui                  = UI.getCurrent();
         middleLayer         = new VerticalLayout();
         messageListScroller = new Scroller();
         messageList         = new MessageList();
@@ -120,7 +142,7 @@ public class MessageView extends Div {
         String message = listener.getValue();
         MessageListItem item = new MessageListItem(message,
                 Instant.now(),
-                CurrentUser.getUsername());
+                currentUser.getUsername());
         List<MessageListItem> currentUserList =
                 new ArrayList<>(messageList.getItems());
         rabbitTemplate.convertAndSend(exchange, routingKey, message);
@@ -129,7 +151,7 @@ public class MessageView extends Div {
     }
 
     private void MessageListUpdater() {
-        CurrentUser = userRepository
+        currentUser = userRepository
                 .findById(GetCurrentUserId())
                 .get();
 
