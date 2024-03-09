@@ -1,13 +1,17 @@
-.middle_layer {
+.page_tabs {
     position: absolute;
-<<<<<<< HEAD
+    top: 0;
+    left: 0;
+    width: 15%;
+    color: black;
+}
+
+.message_list_layer {
+    position: absolute;
     width: 100%;
-    height: 90%;
-=======
     left: 15%;
     display: inline-flex;
     flex-direction: column;
->>>>>>> 4b46c96 (updated vaadin messenger)
 }
 
 .message_list_scroller {
@@ -19,12 +23,17 @@
 }
 
 .message_input {
-    position: absolute;
-    bottom: 0;
-    right: 0;
+    position: relative;
     width: 85%;
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> 4b46c96 (updated vaadin messenger)
+.message_input_layout {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.scroll_to_bottom_icon {
+    position: relative;
+    right: 20px;
+}

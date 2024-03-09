@@ -12,7 +12,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 @AnonymousAllowed
 public class LoginView extends VerticalLayout {
 
-    private String LOGO_LINK = "https://firebasestorage.googleapis.com/v0/b/spring-base-238608.appspot.com/o/logo.png?alt=media&token=427f1442-8caf-481c-9e5a-4df319d9d0fb";
+    public String LOGO_LINK = "https://firebasestorage.googleapis.com/v0/b/spring-base-238608.appspot.com/o/logo.png?alt=media&token=427f1442-8caf-481c-9e5a-4df319d9d0fb";
 
     // PAGE ELEMENTS:
     private Image logoImage;
