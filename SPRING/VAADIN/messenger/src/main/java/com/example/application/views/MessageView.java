@@ -2,6 +2,7 @@ package com.example.application.views;
 
 
 import com.example.application.User;
+import com.example.application.configs.ServiceConfig;
 import com.example.application.repositories.UserRepository;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
@@ -35,8 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Route("messenger")
 @PermitAll
+@Route("messenger")
 @Slf4j
 public class MessageView extends Div {
 
@@ -44,43 +45,40 @@ public class MessageView extends Div {
     private RabbitTemplate rabbitTemplate;
     @Autowired
     private UserRepository userRepository;
-    public String LOGO_LINK = "https://firebasestorage.googleapis.com/v0/b/spring-base-238608.appspot.com/o/logo.png?alt=media&token=427f1442-8caf-481c-9e5a-4df319d9d0fb";
-    private User currentUser;
     private String exchange = "rabbitmq.exchange2";
     private String routingKey = "rabbitmq.routingkey2";
     private String queue = "rabbitmq.queue2";
+
+    // VIEW PARAMETERS:
+    private ServiceConfig SERVICE_CONFIG = new ServiceConfig();
     private String currentMessage = "";
+    private User currentUser;
+    private boolean isScrollerUpdate = false;
+    private double messageInputHeight;
+    private double windowHeight;
 
     // PAGE ELEMENTS:
-    private UI ui;
     private Image logoImage;
-    private Tabs pageTabs;
-            private Tab userTab;
-            private Tab messagesTab;
-    private VerticalLayout messageListLayout;
-    private VerticalLayout messageInputLayout;
-    private Scroller messageListScroller;
-    private MessageList messageList;
     private MessageInput messageInput;
+    private VerticalLayout messageInputLayout;
+    private MessageList messageList;
+    private VerticalLayout messageListLayout;
+    private Scroller messageListScroller;
+    private Tabs pageTabs;
+        private Tab messagesTab;
+        private Tab userTab;
     private Icon scrollToBottomIcon;
-    private float windowHeight;
-    private double messageInputHeight;
+    private UI ui;
 
-    int beforeSize = 0;
-    int currentSize = 0;
 
     public MessageView() {
         setSizeFull();
         ElemPageInitializer();
         ElemPageDesigner();
 
-
         messageInput.addSubmitListener(listener -> {
-            beforeSize = messageList.getItems().size();
-            MessageInputSender(listener);
-            currentSize = messageList.getItems().size();
+            isScrollerUpdate = UpdateMessageInput(listener);
         });
-
 
         add(
                 pageTabs,
@@ -91,23 +89,28 @@ public class MessageView extends Div {
         Delay().subscribe(delay -> {
             ui.access(() -> {
 
-                if(currentSize - beforeSize > 0) {
-                    messageListScroller.getElement().executeJs(
-                            "var el = this; " +
-                                    "el.scrollTo(0, el.scrollHeight);");
-                    currentSize = beforeSize = 0;
+                if(isScrollerUpdate) {
+                    messageListScroller
+                            .getElement()
+                            .executeJs(
+                                        SERVICE_CONFIG.ScrollToBottomJS()
+                                      );
+                    isScrollerUpdate = false;
                 }
 
                 DynamicParamsInitializer();
                 MessageListUpdater();
-                messageListScroller.getElement().executeJs("""
-                return $0.scrollTop + $0.clientHeight - $0.scrollHeight;
-            """, messageListScroller.getElement()).then(height -> {
-                    double heightScroller = height.asNumber();
-                    if(Math.abs(heightScroller) > 2)
-                        scrollToBottomIcon.setVisible(true);
-                    else
-                        scrollToBottomIcon.setVisible(false);
+                messageListScroller
+                        .getElement()
+                        .executeJs(
+                                    SERVICE_CONFIG
+                                            .GetHeightDifferenceScrollerJS(),
+                                    messageListScroller.getElement()
+                                   )
+                        .then(height -> {
+                            double heightScroller = height.asNumber();
+                            scrollToBottomIcon
+                                    .setVisible(Math.abs(heightScroller) > 2);
                 });
             });
         });
@@ -117,16 +120,20 @@ public class MessageView extends Div {
 
     @Bean
     public Binding Binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(routingKey);
+        return BindingBuilder
+                .bind(queue)
+                .to(exchange)
+                .with(routingKey);
     }
 
 
     private Flux<Long> Delay() {
-        return Flux.interval(Duration.ofMillis(100));
+        return Flux
+                .interval(Duration
+                        .ofMillis(SERVICE_CONFIG.DURATION_100_MS));
     }
 
     private void DynamicElementCreator() {
-
         ui.getPage().retrieveExtendedClientDetails(details -> {
             this.windowHeight = details.getWindowInnerHeight();
             messageListLayout.setHeight((float) (windowHeight -
@@ -143,9 +150,10 @@ public class MessageView extends Div {
         });
 
         scrollToBottomIcon.addClickListener(click -> {
-            messageListScroller.getElement().executeJs(
-                    "var el = this; " +
-                            "el.scrollTo(0, el.scrollHeight);");
+            messageListScroller
+                    .getElement()
+                    .executeJs(SERVICE_CONFIG
+                            .ScrollToBottomJS());
             scrollToBottomIcon.setVisible(false);
         });
     }
@@ -153,22 +161,28 @@ public class MessageView extends Div {
     private void DynamicParamsInitializer() {
         messageInput
                 .getElement()
-                .executeJs("return $0.clientHeight", messageInput
-                        .getElement())
+                .executeJs(
+                            SERVICE_CONFIG.GetHeightLayoutJS(),
+                            messageInput.getElement()
+                           )
                 .then(height -> {
                     this.messageInputHeight = height.asNumber();
                 });
     }
 
     private void ElemPageDesigner() {
-        logoImage.addClassNames("logo_image");
-        messageInput.addClassNames("message_input");
-        messageInputLayout.addClassNames("message_input_layout");
-        messageList.addClassNames("message_list");
-        messageListLayout.addClassNames("message_list_layer");
-        messageListScroller.addClassNames("message_list_scroller");
-        pageTabs.addClassNames("page_tabs");
-        scrollToBottomIcon.addClassNames("scroll_to_bottom_icon");
+        logoImage.addClassNames(SERVICE_CONFIG.CSS_LOGO_IMAGE);
+        messageInput.addClassNames(SERVICE_CONFIG.CSS_MESSAGE_INPUT);
+        messageInputLayout.addClassNames(SERVICE_CONFIG
+                                        .CSS_MESSAGE_INPUT_LAYOUT);
+        messageList.addClassNames(SERVICE_CONFIG.CSS_MESSAGE_LIST);
+        messageListLayout.addClassNames(SERVICE_CONFIG
+                                       .CSS_MESSAGE_LIST_LAYER);
+        messageListScroller.addClassNames(SERVICE_CONFIG
+                                         .CSS_MESSAGE_LIST_SCROLLER);
+        pageTabs.addClassNames(SERVICE_CONFIG.CSS_PAGE_TABS);
+        scrollToBottomIcon.addClassNames(SERVICE_CONFIG
+                                        .CSS_SCROLL_TO_BOTTOM_ICON);
 
         pageTabs.setOrientation(Tabs.Orientation.VERTICAL);
 
@@ -185,7 +199,7 @@ public class MessageView extends Div {
 
     private void ElemPageInitializer() {
         ui                  = UI.getCurrent();
-        logoImage           = new Image(LOGO_LINK, null);
+        logoImage           = new Image(SERVICE_CONFIG.LOGO_LINK, null);
 
         userTab = new Tab(VaadinIcon.USER.create(),
                          new Span("Profile"));
@@ -239,8 +253,8 @@ public class MessageView extends Div {
 
     private void MessageListUpdater() {
         currentUser = userRepository
-                .findById(GetCurrentUserId())
-                .get();
+                          .findById(GetCurrentUserId())
+                          .get();
 
         if(!currentMessage.isEmpty()) {
             MessageListItem item = new MessageListItem(currentMessage,
@@ -262,5 +276,12 @@ public class MessageView extends Div {
     @RabbitListener(queues = "rabbitmq.queue1")
     public void Receive(String message) {
         this.currentMessage = message;
+    }
+
+    private boolean UpdateMessageInput(MessageInput.SubmitEvent listener) {
+        int beforeSize = messageList.getItems().size();
+        MessageInputSender(listener);
+        int currentSize = messageList.getItems().size();
+        return currentSize - beforeSize > 0;
     }
 }

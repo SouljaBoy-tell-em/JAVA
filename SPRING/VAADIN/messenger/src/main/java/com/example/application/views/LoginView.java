@@ -1,6 +1,7 @@
 package com.example.application.views;
 
 
+import com.example.application.configs.ServiceConfig;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -8,11 +9,12 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 
-@Route("login")
 @AnonymousAllowed
+@Route("login")
 public class LoginView extends VerticalLayout {
 
-    public String LOGO_LINK = "https://firebasestorage.googleapis.com/v0/b/spring-base-238608.appspot.com/o/logo.png?alt=media&token=427f1442-8caf-481c-9e5a-4df319d9d0fb";
+    // VIEW PARAMETERS:
+    private ServiceConfig SECURITY_CONFIG = new ServiceConfig();
 
     // PAGE ELEMENTS:
     private Image logoImage;
@@ -37,7 +39,7 @@ public class LoginView extends VerticalLayout {
     }
 
     private void ElemPageInitializer() {
-        logoImage = new Image(LOGO_LINK, null);
+        logoImage = new Image(SECURITY_CONFIG.LOGO_LINK, null);
         loginForm = new LoginForm();
     }
 }

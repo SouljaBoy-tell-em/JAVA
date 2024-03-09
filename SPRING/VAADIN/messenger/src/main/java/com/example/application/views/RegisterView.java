@@ -18,9 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
-@Route("register")
-@PermitAll
 @AnonymousAllowed
+@PermitAll
+@Route("register")
 public class RegisterView extends Div {
 
     @Autowired
