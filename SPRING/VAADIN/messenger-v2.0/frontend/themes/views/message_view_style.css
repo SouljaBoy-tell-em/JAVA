@@ -1,0 +1,48 @@
+.avatar_group {
+    position: absolute;
+    left: 5%;
+    top: 5%;
+}
+
+body {
+    position: fixed;
+    overflow-y: scroll;
+}
+
+.left_block_layout {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 35%;
+}
+
+.logo_image {
+    position: relative;
+    width: 65px;
+}
+
+.message_input {
+    position: absolute;
+    width: 65%;
+    right: 0;
+    bottom: 0;
+}
+
+.message_list {
+    position: absolute;
+    width: 65%;
+    right: 0;
+}
+
+.message_list_scroller {
+    position: absolute;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    width: 100%;
+}
+
+.user_box {
+    position: relative;
+    width: 100%;
+}
