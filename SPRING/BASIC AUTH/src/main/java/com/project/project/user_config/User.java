@@ -31,18 +31,19 @@ public class User implements Serializable, UserDetails {
 
 
     public User() {
+        this.role = UserRole.ROLE_USER;
     }
 
     public User(String username, String password, UserRole role) {
         this.username = username;
         this.password = password;
-        this.role     =     role;
+        this.role     =  (role != null) ? role : UserRole.ROLE_USER;
     }
 
     public User(User user) {
         this.username = user.getUsername();
         this.password = user.getPassword();
-        this.role     = user.getRole();
+        this.role     = (user.getRole() != null) ? role : UserRole.ROLE_USER;
     }
 
     @Override
