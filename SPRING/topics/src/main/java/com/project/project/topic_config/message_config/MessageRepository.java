@@ -12,20 +12,24 @@ import java.util.List;
 
 @Repository
 public interface MessageRepository extends CrudRepository<Message, Long>, JpaRepository<Message, Long> {
-    @Query(value = "select * from message_config where topic_id = ?1", nativeQuery = true)
+    @Query(value = "select * from message_config where topic_id = ?1",
+                                                   nativeQuery = true)
     List<Message> findByTopicId(long topicId);
 
     @Modifying
-    @Query(value = "update message_config set text_message = ?1 where message_id = ?2", nativeQuery = true)
+    @Query(value = "update message_config set text_message = ?1 where message_id = ?2",
+                                                                    nativeQuery = true)
     @Transactional
     void updateByMessageId(String textMessage, long messageId);
 
 
     @Modifying
-    @Query(value = "delete from message_config where message_id = ?1", nativeQuery = true)
+    @Query(value = "delete from message_config where message_id = ?1",
+                                                   nativeQuery = true)
     @Transactional
     void deleteByMessageId(long messageId);
 
-    @Query(value = "select count(topic_id) from message_config where topic_id = ?1", nativeQuery = true)
+    @Query(value = "select count(topic_id) from message_config where topic_id = ?1",
+                                                                 nativeQuery = true)
     long amountRowsByTopicId(long topicId);
 }

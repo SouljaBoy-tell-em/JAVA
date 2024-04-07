@@ -7,6 +7,7 @@ import com.project.project.requests.auth_requests.RegisterRequest;
 import com.project.project.user_config.User;
 import com.project.project.user_config.UserRole;
 import com.project.project.user_config.UserServiceManager;
+import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,7 +45,11 @@ public class AuthService {
 
         return new JwtAuthResponse(jwtService.GenerateTokenValue(user));
     }
-    public JwtAuthResponse Register(RegisterRequest request) {
+    public JwtAuthResponse Register(RegisterRequest request) throws AuthException {
+
+        if(userServiceManager.isExist(request.getUsername()))
+            throw new AuthException("So user already exists.");
+
         User user = User
                 .builder()
                 .username(request.getUsername())

@@ -5,6 +5,7 @@ import com.project.project.JWT.AuthService;
 import com.project.project.requests.jwt_requests.JwtAuthResponse;
 import com.project.project.requests.auth_requests.LoginRequest;
 import com.project.project.requests.auth_requests.RegisterRequest;
+import jakarta.security.auth.message.AuthException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class AuthRestController {
     private AuthService authenticationService;
 
     @PostMapping("/register")
-    public JwtAuthResponse signUp(@RequestBody @Valid RegisterRequest request) {
+    public JwtAuthResponse signUp(@RequestBody @Valid RegisterRequest request) throws AuthException {
         return authenticationService.Register(request);
     }
 

@@ -26,6 +26,10 @@ public class UserServiceManager {
                 .get();
     }
 
+    public boolean isExist(String username) {
+        return userRepository.existsById(username);
+    }
+
     public UserDetailsService UserDetailsService() {
         return this::GetById;
     }
