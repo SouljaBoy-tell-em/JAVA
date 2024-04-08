@@ -3,6 +3,7 @@ package com.project.project.controllers;
 
 import com.project.project.requests.topic_requests.CreateTopicRequest;
 import com.project.project.requests.topic_requests.DeleteTopicRequest;
+import com.project.project.requests.topic_requests.UpdateTopicRequest;
 import com.project.project.requests.topic_requests.message_requests.CreateMessageRequest;
 import com.project.project.requests.topic_requests.message_requests.DeleteMessageRequest;
 import com.project.project.requests.topic_requests.message_requests.GetMessagesByTopicIdRequest;
@@ -130,6 +131,16 @@ public class TopicController {
         return "message wasn't update.";
     }
 
+    @PatchMapping("/topic")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String UPDATE_TOPIC(@RequestBody UpdateTopicRequest request) {
+        if(topicRepository.existsById(request.getTopicId())) {
+            topicRepository.updateByTopicId(request.getTopicName(), request.getTopicId());
+            return "topic with id " + request.getTopicId() + " was updated.";
+        }
+        return "topic with id " + request.getTopicId() + " doesn't exist.";
+    }
+
     public String getAuthUsername() {
         try {
             return SecurityContextHolder
@@ -141,11 +152,5 @@ public class TopicController {
             throwable.printStackTrace();
         }
         return null;
-    }
-
-    @GetMapping("/admin")
-    @PreAuthorize("hasRole('ADMIN')")
-    public String exampleAdmin() {
-        return "Hello, admin!";
     }
 }
