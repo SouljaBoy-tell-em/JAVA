@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -42,7 +43,8 @@ public class TopicController {
     @PostMapping("/message")
     public String CREATE_MESSAGE(@RequestBody CreateMessageRequest request) {
         if(!topicRepository.findById(request.getTopicId()).isEmpty()) {
-            messageRepository.save(new Message(request.getTopicId(),
+            messageRepository.save(new Message(
+                    request.getTopicId(),
                     getAuthUsername(),
                     request.getTextMessage(),
                     LocalDate.now())
@@ -109,8 +111,24 @@ public class TopicController {
     }
 
     @GetMapping("/topic")
-    public List<Message> GET_MESSAGES(@RequestBody GetMessagesByTopicIdRequest request) {
-        return messageRepository.findByTopicId(request.getTopicId());
+    public List<Message> GET_MESSAGES(@RequestBody GetMessagesByTopicIdRequest request,
+                                      @RequestParam(value = "size", required = false) String paramSize,
+                                      @RequestParam(value = "page", required = false) String paramPage) {
+        List<Message> allMessages = messageRepository.findByTopicId(request.getTopicId());
+        if(paramPage == null || paramSize == null)
+            return allMessages;
+
+        int size = Integer.parseInt(paramSize);
+        int page = Integer.parseInt(paramPage);
+        int amountPages = (int) Math.ceil(((double) allMessages.size()) / Double.parseDouble(paramSize));
+
+        List<Message> messages = new ArrayList<>();
+        int cell = (page == amountPages) ? allMessages.size() : (page * size);
+        for(int indexPage = size * (page - 1); indexPage < cell; indexPage++) {
+            messages.add(allMessages.get(indexPage));
+        }
+
+        return messages;
     }
 
     @PatchMapping("/message")
