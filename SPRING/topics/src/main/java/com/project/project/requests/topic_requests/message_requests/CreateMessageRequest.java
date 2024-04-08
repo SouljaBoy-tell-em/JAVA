@@ -9,12 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateMessageRequest {
     private long topicId;
-    private String userId;
     private String textMessage;
 
-    public CreateMessageRequest(long topicId, String userId, String textMessage) {
+    public CreateMessageRequest(long topicId, String textMessage) {
         this.topicId = topicId;
-        this.userId = userId;
         this.textMessage = textMessage;
     }
 }
