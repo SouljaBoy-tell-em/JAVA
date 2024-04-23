@@ -10,7 +10,10 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException, ParseException, java.text.ParseException {
-        TicketServiceManager manager = new TicketServiceManager("tickets.json", "Владивосток", "Тель-Авив");
+        if(!CHECK(args[0]))
+            return;
+
+        TicketServiceManager manager = new TicketServiceManager(args[0], "Владивосток", "Тель-Авив");
 
         System.out.println("DIFF: " + manager.fluctuate());
 
@@ -18,5 +21,13 @@ public class Main {
         List<MainTicketInfo> fastTickets = manager.getFastWays();
         for(int iTicket = 0; iTicket < fastTickets.size(); iTicket++)
             System.out.println(fastTickets.get(iTicket));
+    }
+
+    private static boolean CHECK(String arg) {
+        if(arg == null) {
+            System.out.println("File not found");
+            return false;
+        }
+        return true;
     }
 }
