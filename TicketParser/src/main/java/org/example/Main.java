@@ -5,6 +5,8 @@ import org.example.tickets.MainTicketInfo;
 import org.example.tickets.TicketServiceManager;
 import org.json.simple.parser.ParseException;
 import java.io.IOException;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 
@@ -21,6 +23,15 @@ public class Main {
         List<MainTicketInfo> fastTickets = manager.getFastWays();
         for(int iTicket = 0; iTicket < fastTickets.size(); iTicket++)
             System.out.println(fastTickets.get(iTicket));
+
+        System.out.println("TIME: ");
+        for(int iTicket = 0; iTicket < fastTickets.size(); iTicket++) {
+            MainTicketInfo ticketInfo = fastTickets.get(iTicket);
+            System.out.print("CARRIER: " + ticketInfo.getCarrier() + " ");
+            System.out.println(ChronoUnit.SECONDS.between(ticketInfo.getDeparture_time(),
+                                                            ticketInfo.getArrival_time())
+                                                                                + 25200);
+        }
     }
 
     private static boolean CHECK(String arg) {

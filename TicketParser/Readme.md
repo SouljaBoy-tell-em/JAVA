@@ -22,7 +22,7 @@ $ cd target
 ```
 И запустить jar файл:
 ```sh
-$ java -jar URLDownloader-1.0-SNAPSHOT.jar <your_path_to_JSONFile>
+$ java -jar URLDownloader-1.0-SNAPSHOT.jar <your_path>
 ```
+Проект начнет компилироваться и веб страница или файл будут спаршены в указанную директорию(<your_path>).
 Вы увидете что-то такое:
-![Снимок экрана 2024-04-23 в 15 57 47](https://github.com/SouljaBoy-tell-em/JAVA/assets/60592559/9e172874-ec3b-4b31-b80f-3e638d3ee75f)
