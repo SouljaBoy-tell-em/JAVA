@@ -1,0 +1,3 @@
+javac -d appmodules/mathematics mathematics/module-info.java mathematics/com/java/sum/Sum.java
+javac -p appmodules -d appmodules/demo demo/module-info.java demo/com/java/Main.java 
+java -p appmodules -m demo/com.java.Main
